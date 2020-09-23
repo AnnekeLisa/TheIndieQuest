@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 
-namespace DnD_Abilities_and_Basilisk
+namespace DnDMonsterBattleMethods
 {
     class Program
     {
@@ -12,7 +12,7 @@ namespace DnD_Abilities_and_Basilisk
         {
             //AbilityRoll();
 
-            var warriors = new List<string> { "Matej", "David", "Johanna", "Anni" };
+            var warriors = new List<string> {"Matej", "David", "Johanna", "Anni" };
             var random = new Random();
             int d8 = random.Next(1, 9);
             int d6 = random.Next(1, 7);
@@ -20,15 +20,9 @@ namespace DnD_Abilities_and_Basilisk
             int monsterHealth = 15;
             int difficultyRoll = 12;
 
-            /* for (int i = 0; i < 8; i++) //basilisk health calculation
-             {
-                 monsterHealth = monsterHealth + d8;
-                 d8 = random.Next(1, 9);
-             }
+           
 
-            monsterHealth = monsterHealth + 16; //basilikHealth*/
-
-            monsterHealth = 15;
+            monsterHealth = DiceRoll(2,8,6);
             difficultyRoll = 12;
 
             Console.WriteLine($"The {monster} was a great danger for the village. \nOur last hope lies in the hands of our four heros: {warriors[0]}, {warriors[1]}, {warriors[2]}, and {warriors[3]}! \n");
@@ -39,13 +33,13 @@ namespace DnD_Abilities_and_Basilisk
 
             SimulateBattle(warriors, monster, monsterHealth, difficultyRoll);
 
-            monsterHealth = 40;
+            monsterHealth = DiceRoll(9, 8);
             monster = "Mage";
             difficultyRoll = 20;
 
             SimulateBattle(warriors, monster, monsterHealth, difficultyRoll);
 
-            monsterHealth = 84;
+            monsterHealth = DiceRoll(8, 10, 40);
             monster = "Troll";
             difficultyRoll = 18;
 
@@ -53,8 +47,25 @@ namespace DnD_Abilities_and_Basilisk
 
 
 
+            if (warriors.Count > 0)
+            {
+                warriors.ForEach(Console.WriteLine);
+                Console.WriteLine("survived! Whew!");
+            }
+        }
 
+        static int DiceRoll(int numberOfRolls, int diceSides, int fixedBonus = 0)
+        {
+            int diceRoll = 0;
+            var random = new Random();
 
+             for (int i = 0; i < numberOfRolls; i++) 
+            {
+                int roll = random.Next(1, diceSides + 1);
+                diceRoll = diceRoll + roll;
+            }
+
+            return diceRoll + fixedBonus; 
         }
 
 
@@ -69,7 +80,7 @@ namespace DnD_Abilities_and_Basilisk
                 {
                     if (monsterHealth > 0)
                     {
-                        int attack = random.Next(1, 7) + random.Next(1, 7);
+                        int attack = DiceRoll(2,6);
 
                         Console.WriteLine($"{warrior} attacks: {attack}");
                         monsterHealth = monsterHealth - attack;
@@ -91,9 +102,9 @@ namespace DnD_Abilities_and_Basilisk
                 if (warriors.Count > 0 && monsterHealth > 0)
                 {
 
-                    int constitutionRoll = random.Next(1, 21);
+                    int constitutionRoll = DiceRoll(1,20,5);
 
-                    constitutionRoll = constitutionRoll + 5;
+                    
 
                     Console.WriteLine($"The {monster} attacks {warriors[pickWarrior]}.");
                     Console.WriteLine($"{warriors[pickWarrior]} rolled a {constitutionRoll}.");
@@ -119,7 +130,13 @@ namespace DnD_Abilities_and_Basilisk
             else
             {
                 Console.WriteLine($"{monster} died. We did it!!!\n");
+               
             }
+
+            
+            
+
+
         }
 
 

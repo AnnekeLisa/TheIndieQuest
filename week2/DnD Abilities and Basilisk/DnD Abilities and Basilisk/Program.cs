@@ -57,7 +57,7 @@ namespace DnD_Abilities_and_Basilisk
 
                     int constitutionRoll = random.Next(1, 21);
 
-                    constitutionRoll = constitutionRoll + 5;
+                    constitutionRoll += 5;
 
                     Console.WriteLine($"The basilisk uses petrifying gaze on {warriors[pickWarrior]}.");
                     Console.WriteLine($"{warriors[pickWarrior]} rolled a {constitutionRoll}.");
@@ -85,10 +85,6 @@ namespace DnD_Abilities_and_Basilisk
             {
                 Console.WriteLine($"Basilisk died. Yay, we are the greatest heroes in the wooooorld!!");
             }
-
-
-
-
 
         }
         static void AbilityRoll()
