@@ -55,9 +55,6 @@ namespace W5D4M1
                 Console.WriteLine($"Cannot roll {text}. Thats not standard dice notation.");
             }
 
-
-
-
             return isStandard;
         }
 
@@ -127,6 +124,7 @@ namespace W5D4M1
                     bonus = Int32.Parse(numbers[2]);
                 }
             }
+
             /* int bonus = 0;
              string numberOfThrows = diceNotation[0].ToString();
              string numberOfSides = diceNotation[2].ToString();
@@ -142,6 +140,5 @@ namespace W5D4M1
 
             return DiceRoll(throws, sides, bonus);
         }
-
     }
 }
