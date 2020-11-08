@@ -8,7 +8,7 @@ namespace MonsterManualW7D3
 {
     class Program
     {
-        //defining Monster Class, Amor Information Class and Armor Type Enum
+        //defining Monster Class, Amor Information Class, Armor Type Enum and ArmorTypeEntry Dictionary
         class MonsterEntry
         {
             public string Name;
@@ -16,6 +16,7 @@ namespace MonsterManualW7D3
             public string Alignment;
             public string HitPoints;
             public ArmorInformation Armor = new ArmorInformation();
+            
         }
 
         class ArmorInformation
@@ -38,22 +39,51 @@ namespace MonsterManualW7D3
             Other
         }
 
+        class ArmorTypeEntry
+        {
+            public string Name;
+            public string ArmorCategory;
+            public int Weight;
+        }
+
+        static Dictionary<ArmorType, ArmorTypeEntry> ArmorTypeEntries = new Dictionary<ArmorType, ArmorTypeEntry>();
+
         static void Main(string[] args)
         {
             //declaring variables & get data from file
 
             string path = @"MonsterManual.txt";
+            string armorSpecificsPath = @"ArmorTypes.txt";
             string readData = File.ReadAllText(path);
             string[] monsterData = readData.Split("\n\n");
+
+            string[] armorSpecificsData = File.ReadAllLines(armorSpecificsPath);
             var monsterEntries = new List<MonsterEntry>();
             int listNumber = 0;
             
             var searchResults = new List<MonsterEntry>();
 
-            //create monsterEntries out of the txt data
-            foreach(string block in monsterData)
+            //create ArmorTypeEntries out of txt data
+            foreach (string armorSpecificsTextBlock in armorSpecificsData)
             {
-                string[] blockLines = block.Split("\n");
+                string[] armorSpecificsWords = armorSpecificsTextBlock.Split(",");
+                var armorTypeEntry = new ArmorTypeEntry();
+
+                armorTypeEntry.Name = armorSpecificsWords[1];
+                armorTypeEntry.ArmorCategory = armorSpecificsWords[2];
+                int weight = int.Parse(armorSpecificsWords[3]);
+                armorTypeEntry.Weight = weight;
+
+                string armorTypeText = armorSpecificsWords[0];
+                ArmorType armorType = Enum.Parse<ArmorType>(armorTypeText);
+
+                ArmorTypeEntries[armorType] = armorTypeEntry;
+            }
+
+                //create monsterEntries out of the txt data
+                foreach (string monsterTextBlock in monsterData)
+            {
+                string[] blockLines = monsterTextBlock.Split("\n");
                 var monsterEntry = new MonsterEntry();
 
                 //assigning name, description, alignment, hitpoints:
@@ -100,12 +130,13 @@ namespace MonsterManualW7D3
                             monsterEntry.Armor.Type = ArmorType.ScaleMail;
                             break;
                         case "plate":
-                            monsterEntry.Armor.Type = ArmorType.ScaleMail;
+                            monsterEntry.Armor.Type = ArmorType.Plate;
                             break;
                         default:
                             monsterEntry.Armor.Type = ArmorType.Other;
                             break;
                     }
+
                 }
                 //add defined monster to list of monsterEntries 
                 monsterEntries.Add(monsterEntry);
@@ -207,7 +238,20 @@ namespace MonsterManualW7D3
             Console.WriteLine($"Alignment: {selectedMonster.Alignment}");
             Console.WriteLine($"{selectedMonster.HitPoints}");
             Console.WriteLine($"Armor Class: {selectedMonster.Armor.Class}");
-            Console.WriteLine($"Armor Type: {selectedMonster.Armor.Type}");
+
+            if (!ArmorTypeEntries.ContainsKey(selectedMonster.Armor.Type))
+            {
+                Console.WriteLine($"Armor Type: {selectedMonster.Armor.Type}");
+            }
+            else 
+            {
+                ArmorTypeEntry armorTypeEntryOfSelectedMonster = ArmorTypeEntries[selectedMonster.Armor.Type];
+                
+                Console.WriteLine($"Armor Type: {armorTypeEntryOfSelectedMonster.Name}");
+                Console.WriteLine($"Armor Category: {armorTypeEntryOfSelectedMonster.ArmorCategory}");
+                Console.WriteLine($"Armor Weight: {armorTypeEntryOfSelectedMonster.Weight}");
+                
+            }
 
             Console.ReadLine();
         }
